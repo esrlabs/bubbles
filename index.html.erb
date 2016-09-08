@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <title>Skillz@ESRLabs</title>
-    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
     <svg width="1200" height="600"><g transform="translate(1,1)"></g></svg>
@@ -20,7 +19,7 @@
     var width = 1200;
     var height = 600;
     var color = d3.scaleLinear()
-        .domain([0, 1])
+        .domain([0, 100])
         .range(["brown", "steelblue"]);
 
     var svg = d3.select('svg');
@@ -53,8 +52,16 @@
         return d.r;
       })
       .style("fill", function(d) {
-        return color(d.depth);
-      })
+        return color(d.value);
+      });
+    node
+      .append("text")
+      .append("tspan")
+      .attr("style", "text-anchor: middle")
+      .text(function(d) {
+        return d.data.id ? d.data.id : "";
+      });
+
   })();
     </script>
   </body>

@@ -9,7 +9,6 @@ def basis_url
   'https://esrlabs.atlassian.net/wiki/rest/api/'
 end
 
-
 def uri_for_search(name)
   URI(basis_url + "content/search?cql=title=#{name}")
 end

@@ -1,0 +1,37 @@
+(function() {
+
+    var data = {
+        children: [
+          <%= skills_as_json %>
+        ]
+    };
+
+  var width = 1200;
+  var height = 600;
+  var color = d3.scaleLinear()
+      .domain([1, 300])
+      .range(["brown", "steelblue"]);
+
+	var svg = d3.select('#graph').append('svg')
+					.attr('width', width)
+					.attr('height', height);
+
+	var bubble = d3.pack()
+				.size([width, height])
+        .padding(3);
+
+  bubble(data);
+  //  .filter(function(d) { return !d.children; }); // filter out the outer bubble
+
+var vis = svg.selectAll('circle')
+  .data(nodes);
+
+vis.enter().append('circle')
+  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
+  .attr('r', function(d) { return d.r; })
+  .attr("fill", function(d) {
+    return color(d.value);
+  })
+  .text("test");
+
+})();

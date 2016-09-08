@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Skillz@ESRLabs</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <svg width="1200" height="600"><g transform="translate(1,1)"></g></svg>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale.v1.min.js"></script>
+    <script>
+  (function() {
+    var data = {
+      "name": "root",
+      "children": [
+          <%= skills_as_json %>
+      ]};
+
+    var width = 1200;
+    var height = 600;
+    var color = d3.scaleLinear()
+        .domain([0, 1])
+        .range(["brown", "steelblue"]);
+
+    var svg = d3.select('svg');
+    var width = +svg.attr("width");
+    var height = +svg.attr("height");
+
+    var root = d3.hierarchy(data);
+
+    root.sum(function(d) {
+      return d.value ? d.value : 0;
+    });
+
+    var pack = d3.pack()
+        .size([width-2, height-2])
+        .padding(3);
+
+    pack(root);
+
+    var node = svg.select('g').selectAll('g')
+        .data(root.descendants())
+        .enter().append("g")
+        .attr("transform", function(d) {
+          return "translate(" + d.x + "," + d.y + ")";
+        });
+    node.append("circle")
+      .attr("id", function(d) {
+        return d.name;
+      })
+      .attr("r", function(d) {
+        return d.r;
+      })
+      .style("fill", function(d) {
+        return color(d.depth);
+      })
+  })();
+    </script>
+  </body>
+</html>

@@ -1,37 +1,47 @@
 (function() {
 
-    var data = {
-        children: [
-          <%= skills_as_json %>
-        ]
-    };
+  var data = {
+    "name": "root",
+    "children": [
+        <%= skills_as_json %>
+    ]};
 
   var width = 1200;
   var height = 600;
   var color = d3.scaleLinear()
-      .domain([1, 300])
+      .domain([0, 1])
       .range(["brown", "steelblue"]);
 
-	var svg = d3.select('#graph').append('svg')
-					.attr('width', width)
-					.attr('height', height);
+  var svg = d3.select('svg');
+  var width = +svg.attr("width");
+  var height = +svg.attr("height");
 
-	var bubble = d3.pack()
-				.size([width, height])
-        .padding(3);
+  var root = d3.hierarchy(data);
 
-  bubble(data);
-  //  .filter(function(d) { return !d.children; }); // filter out the outer bubble
+  root.sum(function(d) {
+    return d.value ? d.value : 0;
+  });
 
-var vis = svg.selectAll('circle')
-  .data(nodes);
+  var pack = d3.pack()
+      .size([width-2, height-2])
+      .padding(3);
 
-vis.enter().append('circle')
-  .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
-  .attr('r', function(d) { return d.r; })
-  .attr("fill", function(d) {
-    return color(d.value);
-  })
-  .text("test");
+  pack(root);
 
+  var node = svg.select('g').selectAll('g')
+      .data(root.descendants())
+      .enter().append("g")
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
+  node.append("circle")
+    .attr("id", function(d) {
+      return d.name;
+    })
+    .attr("r", function(d) {
+      return d.r;
+    })
+    .style("fill", function(d) {
+      return color(d.depth);
+    })
 })();

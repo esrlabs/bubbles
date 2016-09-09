@@ -1,3 +1,30 @@
 body {
   background-color: #ff5a00;
 }
+
+svg {
+  position: fixed;
+  top: 2.5cm;
+  left: 4cm;
+}
+
+#logo {
+  position: fixed;
+  top: 3cm;
+  left: 2cm;
+}
+ div a img {
+   width: 200px;
+   height: 200px;
+ }
+
+h1 {
+  font-family: 'esrlabs-font';
+  text-align: center;
+  padding-top: 0.5cm;
+  color: black;
+}
+ @font-face {
+  font-family: 'esrlabs-font';
+  src: url('esrlabs-font.woff') format('woff')
+ }

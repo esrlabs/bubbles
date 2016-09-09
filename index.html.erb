@@ -4,13 +4,36 @@
     <meta charset="UTF-8">
     <title>Skillz@ESRLabs</title>
     <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <link rel="icon" href="esrlabs-favicon.ico" type="image/x-icon" />
   </head>
   <body>
+    <h1 id="heading">Skill Map</h1>
     <svg width="1200" height="600"><g transform="translate(1,1)"></g></svg>
+    <div id="logo">
+    <a href="https://esrlabs.atlassian.net/wiki/display/KNLB/NewEmployees"><img src="esrlabs-logo.png" alt="Logo" ></img></a>
+    </div>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale.v1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script>
   (function() {
+
+      function showToolTip(pMessage,pX,pY,pShow)
+   {
+     if (typeof(tooltipDivID)=="undefined")
+     {
+                tooltipDivID =$('<div id="messageToolTipDiv" style="position:absolute;display:block;z-index:10000;border:2px solid black;background-color:rgba(0,0,0,0.8);margin:auto;padding:3px 5px 3px 5px;color:white;font-size:12px;font-family:arial;border-radius: 5px;vertical-align: middle;text-align: center;min-width:50px;overflow:auto;"></div>');
+
+   		$('body').append(tooltipDivID);
+     }
+     if (!pShow) { tooltipDivID.hide(); return;}
+     //MT.tooltipDivID.empty().append(pMessage);
+     tooltipDivID.html(pMessage);
+     tooltipDivID.css({top:pY,left:pX});
+     tooltipDivID.show();
+   }
+
+
     var data = {
       "name": "root",
       "children": [
@@ -20,8 +43,8 @@
     var width = 1200;
     var height = 600;
     var color = d3.scaleLinear()
-        .domain([0, 100])
-        .range(["brown", "steelblue"]);
+        .domain([0, 50])
+        .range(["#0ff000", "#3333ff"]);
 
     var svg = d3.select('svg');
     var width = +svg.attr("width");
@@ -44,7 +67,26 @@
         .enter().append("g")
         .attr("transform", function(d) {
           return "translate(" + d.x + "," + d.y + ")";
-        });
+        })
+
+        .on("mouseover", function(d,i)
+	  {
+	  	//d3.select(this).style("fill", "gold");
+	   	showToolTip(" "+d.data.id, d.x+d3.mouse(this)[0]+50, d.y+d3.mouse(this)[1], true);
+		  //console.log(d3.mouse(this));
+	  })
+	   .on("mousemove", function(d,i)
+	  {
+
+		tooltipDivID.css({top:d.y+d3.mouse(this)[1],left:d.x+d3.mouse(this)[0]+50});
+		//showToolTip("<ul><li>"+data[0][i]+"<li>"+data[1][i]+"</ul>",d.x+d3.mouse(this)[0]+10,d.y+d3.mouse(this)[1]-10,true);
+	  })
+      .on("mouseout", function()
+	  {
+		  //d3.select(this).style("fill", function(d) { return color(data[0][d.key]); });
+		  showToolTip(" ",0,0,false);
+	  });
+
     nodes.append("circle")
       .attr("id", function(d) {
         return d.name;
@@ -55,14 +97,6 @@
       .style("fill", function(d) {
         return color(d.value);
       });
-    nodes
-      .append("text")
-      .append("tspan")
-      .attr("style", "text-anchor: middle")
-      .text(function(d) {
-        return d.data.id ? d.data.id : "";
-      });
-
   })();
     </script>
   </body>

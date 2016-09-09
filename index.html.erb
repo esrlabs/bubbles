@@ -7,7 +7,7 @@
     <link rel="icon" href="esrlabs-favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <h1 id="heading">Skill Map</h1>
+    <h1 id="heading">«Skill Map»</h1>
     <svg width="1200" height="600"><g transform="translate(1,1)"></g></svg>
     <div id="logo">
     <a href="https://esrlabs.atlassian.net/wiki/display/KNLB/NewEmployees"><img src="esrlabs-logo.png" alt="Logo" ></img></a>
@@ -43,8 +43,8 @@
     var width = 1200;
     var height = 600;
     var color = d3.scaleLinear()
-        .domain([0, 50])
-        .range(["#0ff000", "#3333ff"]);
+        .domain([0, 100])
+        .range(["brown", "#A471FD"]);
 
     var svg = d3.select('svg');
     var width = +svg.attr("width");

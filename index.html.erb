@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Skillz@ESRLabs</title>
+    <link rel="stylesheet" type="text/css" href="style.css"></link>
   </head>
   <body>
     <svg width="1200" height="600"><g transform="translate(1,1)"></g></svg>
@@ -38,13 +39,13 @@
 
     pack(root);
 
-    var node = svg.select('g').selectAll('g')
-        .data(root.descendants())
+    var nodes = svg.select('g').selectAll('g')
+        .data(root.children)
         .enter().append("g")
         .attr("transform", function(d) {
           return "translate(" + d.x + "," + d.y + ")";
         });
-    node.append("circle")
+    nodes.append("circle")
       .attr("id", function(d) {
         return d.name;
       })
@@ -54,7 +55,7 @@
       .style("fill", function(d) {
         return color(d.value);
       });
-    node
+    nodes
       .append("text")
       .append("tspan")
       .attr("style", "text-anchor: middle")

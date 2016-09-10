@@ -38,30 +38,25 @@ def get_skill_regexp(string)
   Regexp.new("<span class=\"status-macro aui-lozenge #{string}conf-macro output-inline\">(.+?)<\/spa")
 end
 
+def get(connection, uri)
+  request = Net::HTTP::Get.new(uri.request_uri)
+  request.basic_auth('praktikum', File.read('password'))
+  response = connection.request(request)
+  json = JSON.parse(response.body)
+end
+
 uri = uri_for_search('NewEmployees')
 Net::HTTP.start(
   uri.host,
   uri.port,
   :use_ssl => uri.scheme == 'https') do |http|
 
-  uri = uri_for_search('NewEmployees')
   # get NewEmployee confluence id
-  request = Net::HTTP::Get.new(uri.request_uri)
-  request.basic_auth('praktikum', 'LOGaBOuS')
-
-  response = http.request(request)
-
-  json = JSON.parse(response.body)
+  json = get(http, uri_for_search('NewEmployees'))
   confluence_id = json['results'].first['id']
 
   # get NewEmployee content
-  uri = uri_for_content_by_id(confluence_id)
-  request = Net::HTTP::Get.new(uri.request_uri)
-  request.basic_auth('praktikum', 'LOGaBOuS')
-
-  response = http.request(request)
-
-  json = JSON.parse(response.body)
+  json = get(http, uri_for_content_by_id(confluence_id))
   content = json['body']['storage']['value']
 
   htmlentities = HTMLEntities.new
@@ -80,22 +75,10 @@ Net::HTTP.start(
       progressbar.title = "working on #{user}".ljust(40)
       progressbar.increment
 
-      uri = uri_for_search('"' + URI.escape(user) + '"')
-      request = Net::HTTP::Get.new(uri.request_uri)
-      request.basic_auth('praktikum', 'LOGaBOuS')
-
-      response = http.request(request)
-
-      json = JSON.parse(response.body)
+      json = get(http, uri_for_search('"' + URI.escape(user) + '"'))
       user_id = json['results'].first['id']
 
-      uri = uri_for_content_by_id(user_id)
-      request = Net::HTTP::Get.new(uri.request_uri)
-      request.basic_auth('praktikum', 'LOGaBOuS')
-
-      response = http.request(request)
-
-      json = JSON.parse(response.body)
+      json = get(http, uri_for_content_by_id(user_id))
       content = json['body']['storage']['value']
       start_index = content.index('Skills')
       raise 'Skills start not found' if start_index == nil

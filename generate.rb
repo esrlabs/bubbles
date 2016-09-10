@@ -21,7 +21,7 @@ end
 
 def add_skills(current_skills, all_skills, employee, level)
   current_skills.each do |name|
-    name.upcase!
+    name.capitalize!
     skill = Skill.new(name, level)
     employee.add_skill(skill)
     value = 0

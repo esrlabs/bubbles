@@ -1,15 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    byebug (9.0.5)
     htmlentities (4.3.4)
     ruby-progressbar (1.8.1)
+    values (1.8.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   htmlentities
   ruby-progressbar
+  values
 
 BUNDLED WITH
    1.12.5
